@@ -1,17 +1,5 @@
-import sqlite3
-
-def conectar():
-    """
-    Conecta ao banco de dados SQLite. Cria o banco se não existir.
-    """
-    conn = sqlite3.connect("app.db")
-    return conn
-
 def criar_tabelas():
-    """
-    Cria as tabelas necessárias para o funcionamento do app.
-    """
-    conn = conectar()
+    conn = sqlite3.connect("app.db")
     cursor = conn.cursor()
 
     # Tabela de usuários
@@ -64,29 +52,3 @@ def criar_tabelas():
 
     conn.commit()
     conn.close()
-
-def criar_usuario(nome, email, senha, idade, sexo, peso, altura, objetivo, frequencia_treino):
-    """
-    Cria um novo usuário no banco de dados.
-    """
-    conn = conectar()
-    cursor = conn.cursor()
-    cursor.execute("""
-    INSERT INTO usuarios (nome, email, senha, idade, sexo, peso, altura, objetivo, frequencia_treino)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-    """, (nome, email, senha, idade, sexo, peso, altura, objetivo, frequencia_treino))
-    conn.commit()
-    conn.close()
-
-def obter_usuario_por_email(email):
-    """
-    Obtém um usuário pelo email.
-    """
-    conn = conectar()
-    cursor = conn.cursor()
-    cursor.execute("""
-    SELECT * FROM usuarios WHERE email = ?
-    """, (email,))
-    usuario = cursor.fetchone()
-    conn.close()
-    return usuario
