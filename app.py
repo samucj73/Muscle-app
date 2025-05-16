@@ -44,6 +44,10 @@ st.markdown("""
 if 'usuario' not in st.session_state:
     st.session_state.usuario = None
 
+# Controle interno da página de login/cadastro
+if 'modo_login' not in st.session_state:
+    st.session_state.modo_login = True  # True = mostrar login; False = mostrar cadastro
+
 # TÍTULO CENTRALIZADO
 st.markdown(
     "<h1 style='text-align: center; color: white;'>Muscle Natural App</h1>",
@@ -54,39 +58,53 @@ st.markdown(
 menu = ["Login", "Cadastro"] if not st.session_state.usuario else ["Perfil", "Treino", "Dieta", "Progresso", "Sair"]
 escolha = st.sidebar.selectbox("Menu", menu)
 
-# LOGIN e CADASTRO juntos para o layout do botão lado a lado
+# PÁGINA LOGIN com botão cadastrar ao lado direito do botão entrar
 if escolha == "Login" and not st.session_state.usuario:
-    st.subheader("Login e Cadastro")
+    if st.session_state.modo_login:
+        st.subheader("Login")
+        email = st.text_input("Email", key="email_login")
+        senha = st.text_input("Senha", type="password", key="senha_login")
 
-    col1, col2 = st.columns([1, 1])
+        col1, col2 = st.columns([1, 1])
 
-    with col1:
-        st.markdown("### Login")
-        email_login = st.text_input("Email (login)", key="email_login")
-        senha_login = st.text_input("Senha (login)", type="password", key="senha_login")
-        if st.button("Entrar"):
-            usuario = autenticar_usuario(email_login, senha_login)
-            if usuario:
-                st.session_state.usuario = usuario
-                st.success("Login realizado com sucesso!")
+        with col1:
+            if st.button("Entrar"):
+                usuario = autenticar_usuario(email, senha)
+                if usuario:
+                    st.session_state.usuario = usuario
+                    st.success("Login realizado com sucesso!")
+                    st.experimental_rerun()
+                else:
+                    st.error("Credenciais inválidas.")
+
+        with col2:
+            if st.button("Cadastrar"):
+                st.session_state.modo_login = False
                 st.experimental_rerun()
-            else:
-                st.error("Credenciais inválidas.")
 
-    with col2:
-        st.markdown("### Cadastro")
-        nome_cad = st.text_input("Nome (cadastro)", key="nome_cad")
-        email_cad = st.text_input("Email (cadastro)", key="email_cad")
-        senha_cad = st.text_input("Senha (cadastro)", type="password", key="senha_cad")
-        if st.button("Cadastrar"):
-            if cadastrar_usuario(nome_cad, email_cad, senha_cad):
-                st.success("Cadastro realizado. Faça login.")
-                # Opcional: limpar os campos após cadastro
+    else:  # Modo cadastro ativo
+        st.subheader("Cadastro")
+        nome = st.text_input("Nome", key="nome_cad")
+        email = st.text_input("Email", key="email_cad")
+        senha = st.text_input("Senha", type="password", key="senha_cad")
+
+        col1, col2 = st.columns([1, 1])
+
+        with col1:
+            if st.button("Cadastrar"):
+                if cadastrar_usuario(nome, email, senha):
+                    st.success("Cadastro realizado. Faça login.")
+                    st.session_state.modo_login = True
+                    st.experimental_rerun()
+                else:
+                    st.error("Email já cadastrado.")
+
+        with col2:
+            if st.button("Voltar para Login"):
+                st.session_state.modo_login = True
                 st.experimental_rerun()
-            else:
-                st.error("Email já cadastrado.")
 
-# CADASTRO separado — opcional, você pode remover essa aba se usar o formulário acima
+# CADASTRO isolado (se quiser manter)
 elif escolha == "Cadastro" and not st.session_state.usuario:
     st.subheader("Cadastro")
     nome = st.text_input("Nome")
