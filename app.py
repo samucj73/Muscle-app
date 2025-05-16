@@ -52,20 +52,36 @@ st.markdown(
 
 # Menu lateral
 menu = ["Login", "Cadastro"] if not st.session_state.usuario else ["Perfil", "Treino", "Dieta", "Progresso", "Sair"]
-escolha = st.sidebar.selectbox("Menu", menu)
+
+# Se houver troca programada do menu (ex: botão cadastrar no login), usa essa
+if 'menu_selecionado' in st.session_state:
+    escolha = st.session_state.menu_selecionado
+else:
+    escolha = st.sidebar.selectbox("Menu", menu)
 
 # LOGIN
 if escolha == "Login":
     st.subheader("Login")
     email = st.text_input("Email")
     senha = st.text_input("Senha", type="password")
-    if st.button("Entrar"):
-        usuario = autenticar_usuario(email, senha)
-        if usuario:
-            st.session_state.usuario = usuario
-            st.success("Login realizado com sucesso!")
-        else:
-            st.error("Credenciais inválidas.")
+
+    # Botões lado a lado
+    col1, col2 = st.columns(2)
+    with col1:
+        if st.button("Entrar"):
+            usuario = autenticar_usuario(email, senha)
+            if usuario:
+                st.session_state.usuario = usuario
+                st.success("Login realizado com sucesso!")
+                if 'menu_selecionado' in st.session_state:
+                    del st.session_state['menu_selecionado']
+                st.experimental_rerun()
+            else:
+                st.error("Credenciais inválidas.")
+    with col2:
+        if st.button("Cadastrar"):
+            st.session_state.menu_selecionado = "Cadastro"
+            st.experimental_rerun()
 
 # CADASTRO
 elif escolha == "Cadastro":
@@ -76,6 +92,9 @@ elif escolha == "Cadastro":
     if st.button("Cadastrar"):
         if cadastrar_usuario(nome, email, senha):
             st.success("Cadastro realizado. Faça login.")
+            # Depois de cadastrar, volta para login
+            st.session_state.menu_selecionado = "Login"
+            st.experimental_rerun()
         else:
             st.error("Email já cadastrado.")
 
@@ -102,7 +121,10 @@ elif escolha == "Perfil" and st.session_state.usuario:
 # SAIR
 elif escolha == "Sair":
     st.session_state.usuario = None
+    if 'menu_selecionado' in st.session_state:
+        del st.session_state['menu_selecionado']
     st.success("Você saiu da sua conta.")
+    st.experimental_rerun()
 
 # TREINO
 elif escolha == "Treino" and st.session_state.usuario:
