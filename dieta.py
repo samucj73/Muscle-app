@@ -1,7 +1,7 @@
 import streamlit as st
 from usuario import obter_perfil
 
-def gerar_dieta():
+def gerar_dieta(objetivo_param=None):
     st.markdown(
         "<h2 style='text-align: center; color: white;'>Plano Alimentar Personalizado</h2><hr>",
         unsafe_allow_html=True
@@ -13,7 +13,9 @@ def gerar_dieta():
 
     usuario_id = st.session_state.usuario[0]
     perfil = obter_perfil(usuario_id)
-    objetivo = perfil[6] if perfil else None
+
+    # Usa o objetivo passado como argumento ou o que está no perfil
+    objetivo = objetivo_param or (perfil[6] if perfil else None)
 
     if not objetivo:
         st.warning("Objetivo não definido. Atualize seu perfil.")
