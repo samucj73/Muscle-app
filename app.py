@@ -7,34 +7,27 @@ from progresso import registrar_progresso, exibir_progresso
 
 # Inicializa banco
 criar_tabelas()
-
 st.set_page_config(page_title="Muscle Natural App", layout="wide")
 
-# CSS personalizado para modo escuro e centralização
+# Tema escuro
 st.markdown("""
     <style>
-        body {
-            background-color: #121212;
-            color: white;
-        }
-        h1 {
-            text-align: center;
-            color: white;
-        }
+        body { background-color: #121212; color: white; }
+        h1 { text-align: center; color: white; }
     </style>
 """, unsafe_allow_html=True)
 
-# Estado de sessão
+# Sessão
 if 'usuario' not in st.session_state:
     st.session_state.usuario = None
 
-# Título principal
+# Título
 st.markdown("<h1>Muscle Natural App</h1>", unsafe_allow_html=True)
 
-# Abas do menu
+# Abas
 abas = st.tabs(["Login/Cadastro", "Perfil", "Treino", "Dieta", "Progresso"])
 
-# --- Aba 0: Login/Cadastro ---
+# Aba 0: Login/Cadastro
 with abas[0]:
     st.subheader("Acesse sua conta")
 
@@ -44,6 +37,7 @@ with abas[0]:
             st.session_state.usuario = None
             st.success("Logout realizado com sucesso.")
             st.experimental_rerun()
+
     else:
         escolha = st.radio("Selecione:", ["Login", "Cadastro"], horizontal=True)
 
@@ -58,6 +52,7 @@ with abas[0]:
                     st.experimental_rerun()
                 else:
                     st.error("Credenciais inválidas.")
+
         else:
             nome = st.text_input("Nome", key="nome_cad")
             email = st.text_input("Email", key="email_cad")
@@ -68,12 +63,12 @@ with abas[0]:
                 else:
                     st.error("Email já cadastrado.")
 
-# --- Aba 1: Perfil ---
+# Aba 1: Perfil
 with abas[1]:
     if st.session_state.usuario:
         st.subheader("Seu Perfil")
         usuario_id = st.session_state.usuario[0]
-        perfil = obter_profil(usuario_id)
+        perfil = obter_perfil(usuario_id)
         nome, email, idade, sexo, peso, altura, objetivo, freq = perfil
 
         st.text(f"Nome: {nome} | Email: {email}")
@@ -90,29 +85,29 @@ with abas[1]:
     else:
         st.warning("Você precisa estar logado para acessar o perfil.")
 
-# --- Aba 2: Treino ---
+# Aba 2: Treino
 with abas[2]:
     if st.session_state.usuario:
         st.subheader("Seu Plano de Treino")
         usuario_id = st.session_state.usuario[0]
-        perfil = obter_profil(usuario_id)
+        perfil = obter_perfil(usuario_id)
         objetivo, frequencia = perfil[6], perfil[7]
         gerar_treino(objetivo, frequencia)
     else:
         st.warning("Você precisa estar logado para acessar o treino.")
 
-# --- Aba 3: Dieta ---
+# Aba 3: Dieta
 with abas[3]:
     if st.session_state.usuario:
         st.subheader("Plano Alimentar")
         usuario_id = st.session_state.usuario[0]
-        perfil = obter_profil(usuario_id)
+        perfil = obter_perfil(usuario_id)
         objetivo = perfil[6]
         gerar_dieta(objetivo)
     else:
         st.warning("Você precisa estar logado para acessar a dieta.")
 
-# --- Aba 4: Progresso ---
+# Aba 4: Progresso
 with abas[4]:
     if st.session_state.usuario:
         st.subheader("Acompanhamento de Progresso")
