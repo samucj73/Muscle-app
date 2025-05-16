@@ -1,5 +1,11 @@
-gerar_treino_personalizado(objetivo, frequencia):
+import streamlit as st
+
+def gerar_treino(objetivo=None, frequencia=None):
     st.subheader("Plano de Treino Personalizado")
+
+    if not objetivo or not frequencia:
+        st.warning("Objetivo ou frequência não definidos.")
+        return
 
     if objetivo == "Hipertrofia":
         if frequencia == "1-2x":
