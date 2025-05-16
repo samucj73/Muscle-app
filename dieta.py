@@ -1,65 +1,94 @@
 import streamlit as st
-from usuario import obter_perfil
-
-def calcular_tmb(peso, altura, idade, sexo):
-    if sexo == "Masculino":
-        return 10 * peso + 6.25 * altura - 5 * idade + 5
-    else:
-        return 10 * peso + 6.25 * altura - 5 * idade - 161
-
-def calcular_get(tmb, freq):
-    fator = {
-        "1-2x": 1.375,
-        "3-4x": 1.55,
-        "5-6x": 1.725
-    }
-    return tmb * fator.get(freq, 1.55)
 
 def gerar_dieta():
-    st.subheader("Plano Alimentar Personalizado")
+    st.markdown("<h2 style='text-align: center; color: white;'>🍽️ Plano Alimentar Personalizado</h2>", unsafe_allow_html=True)
 
     usuario = st.session_state.usuario
     if not usuario:
-        st.warning("Faça login para acessar a dieta.")
+        st.warning("⚠️ Faça login para acessar a dieta.")
         return
 
-    perfil = obter_perfil(usuario[0])
-    nome, email, idade, sexo, peso, altura, objetivo, freq = perfil
+    objetivo = usuario[7]  # índice do campo objetivo na tupla do banco
+    st.markdown(f"<h4 style='text-align: center; color: gray;'>Objetivo: {objetivo}</h4>", unsafe_allow_html=True)
+    st.markdown("<hr>", unsafe_allow_html=True)
 
-    if not all([idade, sexo, peso, altura, objetivo, freq]):
-        st.warning("Complete seu perfil na aba 'Perfil' para gerar a dieta.")
-        return
+    plano_alimentar = {
+        "Hipertrofia": {
+            "Café da manhã": [
+                ("🍳 Ovos mexidos", "3 unidades"),
+                ("🍞 Pão integral", "2 fatias"),
+                ("🥛 Leite com aveia", "1 copo")
+            ],
+            "Almoço": [
+                ("🍗 Frango grelhado", "150g"),
+                ("🍚 Arroz integral", "1 xícara"),
+                ("🥗 Salada verde", "à vontade"),
+                ("🥔 Batata-doce", "1 unidade média")
+            ],
+            "Jantar": [
+                ("🐟 Peixe assado", "150g"),
+                ("🍝 Macarrão integral", "1 prato"),
+                ("🥬 Brócolis cozido", "1 porção")
+            ],
+            "Lanches": [
+                ("🍌 Banana com pasta de amendoim", "1 unidade"),
+                ("🥜 Mix de castanhas", "30g")
+            ]
+        },
 
-    tmb = calcular_tmb(peso, altura, idade, sexo)
-    get = calcular_get(tmb, freq)
+        "Emagrecimento": {
+            "Café da manhã": [
+                ("🍎 Maçã", "1 unidade"),
+                ("🍳 Omelete de claras", "3 claras"),
+                ("☕ Café preto sem açúcar", "1 xícara")
+            ],
+            "Almoço": [
+                ("🥩 Carne magra grelhada", "100g"),
+                ("🥦 Legumes no vapor", "1 porção"),
+                ("🥗 Salada verde", "à vontade")
+            ],
+            "Jantar": [
+                ("🍲 Sopa de legumes", "1 prato"),
+                ("🍳 Omelete com vegetais", "1 porção")
+            ],
+            "Lanches": [
+                ("🥜 Castanhas", "10 unidades"),
+                ("🥛 Iogurte desnatado", "1 copo")
+            ]
+        },
 
-    if objetivo == "Hipertrofia":
-        calorias = get + 300
-        proteinas = peso * 2.2
-        carbs = peso * 4
-        gorduras = peso * 1
-    elif objetivo == "Emagrecimento":
-        calorias = get - 400
-        proteinas = peso * 2
-        carbs = peso * 2.5
-        gorduras = peso * 0.8
-    else:  # Resistência
-        calorias = get
-        proteinas = peso * 1.6
-        carbs = peso * 5
-        gorduras = peso * 1
+        "Resistência": {
+            "Café da manhã": [
+                ("🍞 Torradas integrais", "2 unidades"),
+                ("🍯 Mel", "1 colher"),
+                ("🍌 Banana", "1 unidade"),
+                ("🥛 Leite desnatado", "1 copo")
+            ],
+            "Almoço": [
+                ("🥩 Bife grelhado", "120g"),
+                ("🍚 Arroz branco", "1 xícara"),
+                ("🥗 Salada com azeite", "à vontade")
+            ],
+            "Jantar": [
+                ("🍝 Macarrão com frango desfiado", "1 prato"),
+                ("🥬 Espinafre refogado", "1 porção")
+            ],
+            "Lanches": [
+                ("🍪 Barra de proteína", "1 unidade"),
+                ("🍓 Morangos", "1 xícara")
+            ]
+        }
+    }
 
-    st.success(f"Calorias diárias: {int(calorias)} kcal")
-    st.info(f"Proteínas: {int(proteinas)}g | Carboidratos: {int(carbs)}g | Gorduras: {int(gorduras)}g")
+    refeicoes = st.tabs(["Café da manhã", "Almoço", "Jantar", "Lanches"])
 
-    st.markdown("---")
-    st.markdown("### Exemplo de Refeições:")
-
-    st.markdown(f"""
-    **Café da Manhã**: Ovos mexidos, pão integral, fruta, café preto  
-    **Lanche da Manhã**: Iogurte + aveia + banana  
-    **Almoço**: Arroz, feijão, frango grelhado, salada  
-    **Lanche da Tarde**: Sanduíche natural ou shake de whey  
-    **Jantar**: Omelete com legumes e batata doce  
-    **Ceia**: Iogurte ou castanhas com proteína
-    """)
+    for i, nome_refeicao in enumerate(["Café da manhã", "Almoço", "Jantar", "Lanches"]):
+        with refeicoes[i]:
+            st.markdown(f"<h3 style='color: white;'>{nome_refeicao}</h3>", unsafe_allow_html=True)
+            for alimento, quantidade in plano_alimentar[objetivo][nome_refeicao]:
+                st.markdown(f"""
+                <div style="background-color: #222; padding: 10px; border-radius: 8px; margin-bottom: 10px;">
+                    <strong style="color: white;">{alimento}</strong><br>
+                    <span style="color: gray;">Quantidade:</span> <span style="color: white;">{quantidade}</span>
+                </div>
+                """, unsafe_allow_html=True)
