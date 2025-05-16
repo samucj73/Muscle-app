@@ -1,6 +1,9 @@
 import streamlit as st
 from usuario import cadastrar_usuario, autenticar_usuario, atualizar_perfil, obter_perfil
 from database import criar_tabelas
+from treino import gerar_treino
+from dieta import gerar_dieta
+from progresso import registrar_progresso, exibir_progresso
 
 # Inicializa banco
 criar_tabelas()
@@ -9,9 +12,13 @@ criar_tabelas()
 if 'usuario' not in st.session_state:
     st.session_state.usuario = None
 
-st.title("Muscle Natural App")
+# TÍTULO CENTRALIZADO
+st.markdown(
+    "<h1 style='text-align: center; color: black;'>Muscle Natural App</h1>",
+    unsafe_allow_html=True
+)
 
-# Aba principal
+# Menu lateral
 menu = ["Login", "Cadastro"] if not st.session_state.usuario else ["Perfil", "Treino", "Dieta", "Progresso", "Sair"]
 escolha = st.sidebar.selectbox("Menu", menu)
 
@@ -65,6 +72,30 @@ elif escolha == "Sair":
     st.session_state.usuario = None
     st.success("Você saiu da sua conta.")
 
-# Lembrete para as abas futuras
+# TREINO
+elif escolha == "Treino" and st.session_state.usuario:
+    gerar_treino()
+
+# DIETA
+elif escolha == "Dieta" and st.session_state.usuario:
+    gerar_dieta()
+
+# PROGRESSO
+elif escolha == "Progresso" and st.session_state.usuario:
+    registrar_progresso()
+    exibir_progresso()
+
+# LEMBRETE SE NÃO ESTIVER LOGADO
 elif escolha in ["Treino", "Dieta", "Progresso"] and not st.session_state.usuario:
     st.warning("Faça login para acessar essa aba.")
+
+# RODAPÉ CENTRALIZADO
+st.markdown(
+    """
+    <hr style="margin-top: 50px;">
+    <div style='text-align: center; font-size: 14px;'>
+        <strong>SAMUCJ TECHNOLOGY</strong>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
