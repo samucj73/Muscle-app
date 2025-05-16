@@ -74,7 +74,14 @@ elif escolha == "Sair":
 
 # TREINO
 elif escolha == "Treino" and st.session_state.usuario:
-    gerar_treino()
+    usuario_id = st.session_state.usuario[0]
+    perfil = obter_perfil(usuario_id)
+
+    if perfil:
+        _, _, _, _, _, _, objetivo, freq = perfil
+        gerar_treino(objetivo, freq)
+    else:
+        st.warning("Complete seu perfil na aba 'Perfil' para gerar seu treino.")
 
 # DIETA
 elif escolha == "Dieta" and st.session_state.usuario:
