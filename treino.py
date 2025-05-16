@@ -1,90 +1,78 @@
 import streamlit as st
 
 def gerar_treino(objetivo=None, frequencia=None):
-    st.subheader("Plano de Treino Personalizado")
+    st.markdown("<h2 style='text-align: center; color: white;'>🏋️ Plano de Treino Personalizado</h2>", unsafe_allow_html=True)
 
     if not objetivo or not frequencia:
-        st.warning("Objetivo ou frequência não definidos.")
+        st.warning("⚠️ Objetivo ou frequência não definidos.")
         return
 
-    # Parâmetros por objetivo
-    if objetivo == "Hipertrofia":
-        series = "3-4 séries"
-        reps = "8-12 repetições"
-    elif objetivo == "Emagrecimento":
-        series = "3-4 séries"
-        reps = "15-20 repetições"
+    st.markdown("<hr>", unsafe_allow_html=True)
+
+    grupos_musculares = {
+        "Peito": [
+            ("🏋️ Supino reto com barra", "3-4 séries", "8-12 reps", "Banco, barra"),
+            ("🏋️ Supino inclinado com halteres", "3 séries", "10-12 reps", "Banco inclinado, halteres"),
+            ("🏋️ Crucifixo reto com halteres", "3 séries", "12-15 reps", "Banco, halteres"),
+            ("🏋️ Crossover na polia", "3 séries", "12 reps", "Polia"),
+            ("🏋️ Flexão de braço", "4 séries", "Máx reps", "Corpo livre")
+        ],
+        "Costas": [
+            ("🏋️ Barra fixa", "4 séries", "Máx reps", "Barra fixa"),
+            ("🏋️ Puxada frente na polia", "3 séries", "10 reps", "Polia alta"),
+            ("🏋️ Remada curvada", "3 séries", "8-10 reps", "Barra ou halteres"),
+            ("🏋️ Remada unilateral", "3 séries", "10 reps", "Halter"),
+            ("🏋️ Pullover", "3 séries", "12 reps", "Halter ou máquina")
+        ],
+        "Pernas": [
+            ("🏋️ Agachamento livre", "4 séries", "8-12 reps", "Barra"),
+            ("🏋️ Leg press", "4 séries", "10-12 reps", "Máquina"),
+            ("🏋️ Cadeira extensora", "3 séries", "12 reps", "Máquina"),
+            ("🏋️ Flexora deitada", "3 séries", "12 reps", "Máquina"),
+            ("🏋️ Panturrilha em pé", "4 séries", "15 reps", "Máquina ou peso livre")
+        ],
+        "Ombros": [
+            ("🏋️ Desenvolvimento com halteres", "3 séries", "10 reps", "Halteres"),
+            ("🏋️ Elevação lateral", "3 séries", "12 reps", "Halteres"),
+            ("🏋️ Elevação frontal", "3 séries", "12 reps", "Halteres"),
+            ("🏋️ Remada alta", "3 séries", "10-12 reps", "Barra"),
+            ("🏋️ Encolhimento de ombros", "4 séries", "12 reps", "Halteres ou barra")
+        ],
+        "Braços": [
+            ("🏋️ Rosca direta", "3 séries", "10 reps", "Barra"),
+            ("🏋️ Rosca alternada", "3 séries", "12 reps", "Halteres"),
+            ("🏋️ Tríceps testa", "3 séries", "10 reps", "Barra"),
+            ("🏋️ Tríceps pulley", "3 séries", "12 reps", "Polia"),
+            ("🏋️ Rosca martelo", "3 séries", "12 reps", "Halteres")
+        ],
+        "Abdômen": [
+            ("🏋️ Abdominal infra", "4 séries", "15 reps", "Peso corporal"),
+            ("🏋️ Abdominal supra", "4 séries", "20 reps", "Peso corporal"),
+            ("🏋️ Prancha", "3 séries", "30-60s", "Corpo livre"),
+            ("🏋️ Abdominal com polia", "3 séries", "15 reps", "Polia alta"),
+            ("🏋️ Bicicleta no solo", "3 séries", "20 reps", "Peso corporal")
+        ]
+    }
+
+    # Ajusta as repetições de acordo com o objetivo
+    if objetivo == "Emagrecimento":
+        ajuste_reps = lambda r: "15-20 reps"
     elif objetivo == "Resistência":
-        series = "2-3 séries"
-        reps = "20+ repetições"
-    else:
-        st.warning("Objetivo não reconhecido.")
-        return
+        ajuste_reps = lambda r: "18-25 reps"
+    else:  # Hipertrofia padrão
+        ajuste_reps = lambda r: r
 
-    # Planos de treino por frequência
-    if frequencia == "1-2x":
-        st.markdown("**Treino Corpo Inteiro**")
-        st.markdown(f"- Agachamento livre ({series} de {reps})")
-        st.markdown(f"- Supino reto com barra ({series} de {reps})")
-        st.markdown(f"- Remada curvada ({series} de {reps})")
-        st.markdown(f"- Desenvolvimento militar ({series} de {reps})")
-        st.markdown(f"- Elevação lateral ({series} de {reps})")
-        st.markdown(f"- Prancha abdominal ({series} de 30-60 segundos)")
+    abas = st.tabs(list(grupos_musculares.keys()))
 
-    elif frequencia == "3-4x":
-        st.markdown("**Treino A - Peito e Tríceps**")
-        st.markdown(f"- Supino reto com barra ({series} de {reps})")
-        st.markdown(f"- Supino inclinado com halteres ({series} de {reps})")
-        st.markdown(f"- Crucifixo com halteres ({series} de {reps})")
-        st.markdown(f"- Tríceps testa ({series} de {reps})")
-        st.markdown(f"- Tríceps pulley ({series} de {reps})")
-
-        st.markdown("**Treino B - Costas e Bíceps**")
-        st.markdown(f"- Barra fixa ({series} de {reps})")
-        st.markdown(f"- Remada curvada com barra ({series} de {reps})")
-        st.markdown(f"- Pulldown frontal ({series} de {reps})")
-        st.markdown(f"- Rosca direta com barra ({series} de {reps})")
-        st.markdown(f"- Rosca alternada com halteres ({series} de {reps})")
-
-        st.markdown("**Treino C - Pernas e Abdômen**")
-        st.markdown(f"- Agachamento livre ({series} de {reps})")
-        st.markdown(f"- Leg press ({series} de {reps})")
-        st.markdown(f"- Cadeira extensora ({series} de {reps})")
-        st.markdown(f"- Stiff com halteres ({series} de {reps})")
-        st.markdown(f"- Elevação de pernas ({series} de {reps})")
-
-    elif frequencia == "5-6x":
-        st.markdown("**Segunda - Peito e Tríceps**")
-        st.markdown(f"- Supino reto com barra ({series} de {reps})")
-        st.markdown(f"- Supino inclinado com halteres ({series} de {reps})")
-        st.markdown(f"- Crucifixo inclinado ({series} de {reps})")
-        st.markdown(f"- Tríceps coice ({series} de {reps})")
-        st.markdown(f"- Tríceps na corda ({series} de {reps})")
-
-        st.markdown("**Terça - Costas e Bíceps**")
-        st.markdown(f"- Puxada frontal ({series} de {reps})")
-        st.markdown(f"- Remada curvada ({series} de {reps})")
-        st.markdown(f"- Remada unilateral ({series} de {reps})")
-        st.markdown(f"- Rosca direta ({series} de {reps})")
-        st.markdown(f"- Rosca martelo ({series} de {reps})")
-
-        st.markdown("**Quarta - Pernas**")
-        st.markdown(f"- Agachamento livre ({series} de {reps})")
-        st.markdown(f"- Leg press ({series} de {reps})")
-        st.markdown(f"- Cadeira flexora ({series} de {reps})")
-        st.markdown(f"- Stiff ({series} de {reps})")
-        st.markdown(f"- Panturrilha no leg press ({series} de {reps})")
-
-        st.markdown("**Quinta - Ombros e Abdômen**")
-        st.markdown(f"- Desenvolvimento militar ({series} de {reps})")
-        st.markdown(f"- Elevação lateral ({series} de {reps})")
-        st.markdown(f"- Elevação frontal ({series} de {reps})")
-        st.markdown(f"- Encolhimento para trapézio ({series} de {reps})")
-        st.markdown(f"- Abdominal infra ({series} de {reps})")
-
-        st.markdown("**Sexta - Corpo inteiro (leve)**")
-        st.markdown(f"- Circuito leve com foco em resistência")
-        st.markdown(f"- Exercícios compostos com pouco descanso")
-
-    else:
-        st.warning("Frequência de treino não reconhecida.")
+    for i, grupo in enumerate(grupos_musculares):
+        with abas[i]:
+            st.markdown(f"<h3 style='color: white;'>{grupo}</h3>", unsafe_allow_html=True)
+            for nome, series, reps, equipamento in grupos_musculares[grupo]:
+                st.markdown(f"""
+                <div style="background-color: #222; padding: 10px; border-radius: 8px; margin-bottom: 10px;">
+                    <strong style="color: white;">{nome}</strong><br>
+                    <span style="color: gray;">Séries:</span> <span style="color: white;">{series}</span><br>
+                    <span style="color: gray;">Repetições:</span> <span style="color: white;">{ajuste_reps(reps)}</span><br>
+                    <span style="color: gray;">Equipamento:</span> <span style="color: white;">{equipamento}</span>
+                </div>
+                """, unsafe_allow_html=True)
