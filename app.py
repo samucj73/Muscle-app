@@ -65,7 +65,7 @@ if escolha == "Login" and not st.session_state.usuario:
         email = st.text_input("Email", key="email_login")
         senha = st.text_input("Senha", type="password", key="senha_login")
 
-        col1, col2 = st.columns([2, 1])
+        col1, col2 = st.columns([1, 1])
 
         with col1:
             if st.button("Entrar"):
@@ -74,7 +74,6 @@ if escolha == "Login" and not st.session_state.usuario:
                     st.session_state.usuario = usuario
                     st.success("Login realizado com sucesso!")
                     st.experimental_rerun()
-                    return
                 else:
                     st.error("Credenciais inválidas.")
 
@@ -82,7 +81,6 @@ if escolha == "Login" and not st.session_state.usuario:
             if st.button("Cadastrar"):
                 st.session_state.modo_login = False
                 st.experimental_rerun()
-                return
 
     else:  # Modo cadastro ativo
         st.subheader("Cadastro")
@@ -90,7 +88,7 @@ if escolha == "Login" and not st.session_state.usuario:
         email = st.text_input("Email", key="email_cad")
         senha = st.text_input("Senha", type="password", key="senha_cad")
 
-        col1, col2 = st.columns([2, 1])
+        col1, col2 = st.columns([1, 1])
 
         with col1:
             if st.button("Cadastrar"):
@@ -98,7 +96,6 @@ if escolha == "Login" and not st.session_state.usuario:
                     st.success("Cadastro realizado. Faça login.")
                     st.session_state.modo_login = True
                     st.experimental_rerun()
-                    return
                 else:
                     st.error("Email já cadastrado.")
 
@@ -106,7 +103,6 @@ if escolha == "Login" and not st.session_state.usuario:
             if st.button("Voltar para Login"):
                 st.session_state.modo_login = True
                 st.experimental_rerun()
-                return
 
 # CADASTRO isolado (se quiser manter)
 elif escolha == "Cadastro" and not st.session_state.usuario:
@@ -145,7 +141,6 @@ elif escolha == "Sair":
     st.session_state.usuario = None
     st.success("Você saiu da sua conta.")
     st.experimental_rerun()
-    return
 
 # TREINO
 elif escolha == "Treino" and st.session_state.usuario:
