@@ -7,41 +7,84 @@ def gerar_treino(objetivo=None, frequencia=None):
         st.warning("Objetivo ou frequência não definidos.")
         return
 
+    # Parâmetros por objetivo
     if objetivo == "Hipertrofia":
-        if frequencia == "1-2x":
-            st.write("Treino A: Corpo inteiro (Alta intensidade)")
-            st.write("- Agachamento livre")
-            st.write("- Supino reto com barra")
-            st.write("- Remada curvada")
-            st.write("- Desenvolvimento militar")
-        elif frequencia == "3-4x":
-            st.write("Treino A: Peito e Tríceps")
-            st.write("- Supino reto com barra")
-            st.write("- Crucifixo com halteres")
-            st.write("- Tríceps testa")
-            st.write("Treino B: Costas e Bíceps")
-            st.write("- Barra fixa")
-            st.write("- Remada curvada")
-            st.write("- Rosca direta")
-        else:
-            st.write("Divisão ABC:")
-            st.write("Seg: Peito e Tríceps")
-            st.write("Ter: Costas e Bíceps")
-            st.write("Qua: Pernas")
-            st.write("Qui: Ombros e abdômen")
-            st.write("Sex: Corpo inteiro (leve)")
-
+        series = "3-4 séries"
+        reps = "8-12 repetições"
     elif objetivo == "Emagrecimento":
-        st.write("Treino com foco em resistência e queima calórica")
-        st.write("- Circuito de corpo inteiro")
-        st.write("- Aeróbicos após treino de musculação")
-        st.write("- Curtos descansos entre séries")
-
+        series = "3-4 séries"
+        reps = "15-20 repetições"
     elif objetivo == "Resistência":
-        st.write("Treino com repetições altas e menor carga")
-        st.write("- Séries de 15-20 repetições")
-        st.write("- Exercícios compostos e funcionais")
-        st.write("- Foco em técnica e forma")
-
+        series = "2-3 séries"
+        reps = "20+ repetições"
     else:
         st.warning("Objetivo não reconhecido.")
+        return
+
+    # Planos de treino por frequência
+    if frequencia == "1-2x":
+        st.markdown("**Treino Corpo Inteiro**")
+        st.markdown(f"- Agachamento livre ({series} de {reps})")
+        st.markdown(f"- Supino reto com barra ({series} de {reps})")
+        st.markdown(f"- Remada curvada ({series} de {reps})")
+        st.markdown(f"- Desenvolvimento militar ({series} de {reps})")
+        st.markdown(f"- Elevação lateral ({series} de {reps})")
+        st.markdown(f"- Prancha abdominal ({series} de 30-60 segundos)")
+
+    elif frequencia == "3-4x":
+        st.markdown("**Treino A - Peito e Tríceps**")
+        st.markdown(f"- Supino reto com barra ({series} de {reps})")
+        st.markdown(f"- Supino inclinado com halteres ({series} de {reps})")
+        st.markdown(f"- Crucifixo com halteres ({series} de {reps})")
+        st.markdown(f"- Tríceps testa ({series} de {reps})")
+        st.markdown(f"- Tríceps pulley ({series} de {reps})")
+
+        st.markdown("**Treino B - Costas e Bíceps**")
+        st.markdown(f"- Barra fixa ({series} de {reps})")
+        st.markdown(f"- Remada curvada com barra ({series} de {reps})")
+        st.markdown(f"- Pulldown frontal ({series} de {reps})")
+        st.markdown(f"- Rosca direta com barra ({series} de {reps})")
+        st.markdown(f"- Rosca alternada com halteres ({series} de {reps})")
+
+        st.markdown("**Treino C - Pernas e Abdômen**")
+        st.markdown(f"- Agachamento livre ({series} de {reps})")
+        st.markdown(f"- Leg press ({series} de {reps})")
+        st.markdown(f"- Cadeira extensora ({series} de {reps})")
+        st.markdown(f"- Stiff com halteres ({series} de {reps})")
+        st.markdown(f"- Elevação de pernas ({series} de {reps})")
+
+    elif frequencia == "5-6x":
+        st.markdown("**Segunda - Peito e Tríceps**")
+        st.markdown(f"- Supino reto com barra ({series} de {reps})")
+        st.markdown(f"- Supino inclinado com halteres ({series} de {reps})")
+        st.markdown(f"- Crucifixo inclinado ({series} de {reps})")
+        st.markdown(f"- Tríceps coice ({series} de {reps})")
+        st.markdown(f"- Tríceps na corda ({series} de {reps})")
+
+        st.markdown("**Terça - Costas e Bíceps**")
+        st.markdown(f"- Puxada frontal ({series} de {reps})")
+        st.markdown(f"- Remada curvada ({series} de {reps})")
+        st.markdown(f"- Remada unilateral ({series} de {reps})")
+        st.markdown(f"- Rosca direta ({series} de {reps})")
+        st.markdown(f"- Rosca martelo ({series} de {reps})")
+
+        st.markdown("**Quarta - Pernas**")
+        st.markdown(f"- Agachamento livre ({series} de {reps})")
+        st.markdown(f"- Leg press ({series} de {reps})")
+        st.markdown(f"- Cadeira flexora ({series} de {reps})")
+        st.markdown(f"- Stiff ({series} de {reps})")
+        st.markdown(f"- Panturrilha no leg press ({series} de {reps})")
+
+        st.markdown("**Quinta - Ombros e Abdômen**")
+        st.markdown(f"- Desenvolvimento militar ({series} de {reps})")
+        st.markdown(f"- Elevação lateral ({series} de {reps})")
+        st.markdown(f"- Elevação frontal ({series} de {reps})")
+        st.markdown(f"- Encolhimento para trapézio ({series} de {reps})")
+        st.markdown(f"- Abdominal infra ({series} de {reps})")
+
+        st.markdown("**Sexta - Corpo inteiro (leve)**")
+        st.markdown(f"- Circuito leve com foco em resistência")
+        st.markdown(f"- Exercícios compostos com pouco descanso")
+
+    else:
+        st.warning("Frequência de treino não reconhecida.")
