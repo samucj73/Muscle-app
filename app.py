@@ -8,13 +8,45 @@ from progresso import registrar_progresso, exibir_progresso
 # Inicializa banco
 criar_tabelas()
 
+# Tema escuro com CSS customizado
+st.markdown("""
+    <style>
+        body {
+            background-color: #000000;
+            color: #FFFFFF;
+        }
+        .css-1v0mbdj.edgvbvh3 {
+            background-color: #111111;
+        }
+        .stTextInput > div > div > input, .stNumberInput input, .stSelectbox div div {
+            background-color: #222;
+            color: white;
+        }
+        .stButton>button {
+            background-color: #444;
+            color: white;
+            border: 1px solid white;
+        }
+        .stButton>button:hover {
+            background-color: #666;
+        }
+        .stRadio > div {
+            background-color: #111;
+            color: white;
+        }
+        .stSelectbox div {
+            color: white;
+        }
+    </style>
+""", unsafe_allow_html=True)
+
 # Sessão de autenticação
 if 'usuario' not in st.session_state:
     st.session_state.usuario = None
 
 # TÍTULO CENTRALIZADO
 st.markdown(
-    "<h1 style='text-align: center; color: black;'>Muscle Natural App</h1>",
+    "<h1 style='text-align: center; color: white;'>Muscle Natural App</h1>",
     unsafe_allow_html=True
 )
 
@@ -76,16 +108,15 @@ elif escolha == "Sair":
 elif escolha == "Treino" and st.session_state.usuario:
     usuario_id = st.session_state.usuario[0]
     perfil = obter_perfil(usuario_id)
-
-    if perfil:
-        _, _, _, _, _, _, objetivo, freq = perfil
-        gerar_treino(objetivo, freq)
-    else:
-        st.warning("Complete seu perfil na aba 'Perfil' para gerar seu treino.")
+    objetivo, frequencia = perfil[6], perfil[7]
+    gerar_treino(objetivo, frequencia)
 
 # DIETA
 elif escolha == "Dieta" and st.session_state.usuario:
-    gerar_dieta()
+    usuario_id = st.session_state.usuario[0]
+    perfil = obter_perfil(usuario_id)
+    objetivo = perfil[6]
+    gerar_dieta(objetivo)
 
 # PROGRESSO
 elif escolha == "Progresso" and st.session_state.usuario:
@@ -99,8 +130,8 @@ elif escolha in ["Treino", "Dieta", "Progresso"] and not st.session_state.usuari
 # RODAPÉ CENTRALIZADO
 st.markdown(
     """
-    <hr style="margin-top: 50px;">
-    <div style='text-align: center; font-size: 14px;'>
+    <hr style="margin-top: 50px; border: 1px solid #555;">
+    <div style='text-align: center; font-size: 14px; color: white;'>
         <strong>SAMUCJ TECHNOLOGY</strong>
     </div>
     """,
