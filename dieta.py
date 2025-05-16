@@ -1,94 +1,60 @@
 import streamlit as st
 
 def gerar_dieta():
-    st.markdown("<h2 style='text-align: center; color: white;'>🍽️ Plano Alimentar Personalizado</h2>", unsafe_allow_html=True)
+    st.subheader("Plano Alimentar Personalizado")
 
-    usuario = st.session_state.usuario
-    if not usuario:
-        st.warning("⚠️ Faça login para acessar a dieta.")
+    objetivo = st.session_state.usuario[7] if st.session_state.usuario else None
+
+    if not objetivo:
+        st.warning("Objetivo não definido. Atualize seu perfil.")
         return
-
-    objetivo = usuario[7]  # índice do campo objetivo na tupla do banco
-    st.markdown(f"<h4 style='text-align: center; color: gray;'>Objetivo: {objetivo}</h4>", unsafe_allow_html=True)
-    st.markdown("<hr>", unsafe_allow_html=True)
 
     plano_alimentar = {
         "Hipertrofia": {
-            "Café da manhã": [
-                ("🍳 Ovos mexidos", "3 unidades"),
-                ("🍞 Pão integral", "2 fatias"),
-                ("🥛 Leite com aveia", "1 copo")
-            ],
-            "Almoço": [
-                ("🍗 Frango grelhado", "150g"),
-                ("🍚 Arroz integral", "1 xícara"),
-                ("🥗 Salada verde", "à vontade"),
-                ("🥔 Batata-doce", "1 unidade média")
-            ],
-            "Jantar": [
-                ("🐟 Peixe assado", "150g"),
-                ("🍝 Macarrão integral", "1 prato"),
-                ("🥬 Brócolis cozido", "1 porção")
-            ],
-            "Lanches": [
-                ("🍌 Banana com pasta de amendoim", "1 unidade"),
-                ("🥜 Mix de castanhas", "30g")
-            ]
+            "Café da manhã": [("Ovos mexidos", "3 unidades"), ("Aveia", "40g"), ("Banana", "1 unidade")],
+            "Almoço": [("Arroz integral", "100g"), ("Frango grelhado", "150g"), ("Brócolis cozido", "50g")],
+            "Lanche da tarde": [("Iogurte natural", "1 copo"), ("Granola", "30g")],
+            "Jantar": [("Batata doce", "100g"), ("Carne moída magra", "150g"), ("Salada verde", "à vontade")]
         },
-
         "Emagrecimento": {
-            "Café da manhã": [
-                ("🍎 Maçã", "1 unidade"),
-                ("🍳 Omelete de claras", "3 claras"),
-                ("☕ Café preto sem açúcar", "1 xícara")
-            ],
-            "Almoço": [
-                ("🥩 Carne magra grelhada", "100g"),
-                ("🥦 Legumes no vapor", "1 porção"),
-                ("🥗 Salada verde", "à vontade")
-            ],
-            "Jantar": [
-                ("🍲 Sopa de legumes", "1 prato"),
-                ("🍳 Omelete com vegetais", "1 porção")
-            ],
-            "Lanches": [
-                ("🥜 Castanhas", "10 unidades"),
-                ("🥛 Iogurte desnatado", "1 copo")
-            ]
+            "Café da manhã": [("Ovo cozido", "2 unidades"), ("Mamão", "1 fatia"), ("Chá verde", "1 xícara")],
+            "Almoço": [("Quinoa", "70g"), ("Peito de frango", "120g"), ("Abobrinha grelhada", "50g")],
+            "Lanche da tarde": [("Maçã", "1 unidade"), ("Castanhas", "5 unidades")],
+            "Jantar": [("Sopa de legumes", "1 prato"), ("Frango desfiado", "80g")]
         },
-
         "Resistência": {
-            "Café da manhã": [
-                ("🍞 Torradas integrais", "2 unidades"),
-                ("🍯 Mel", "1 colher"),
-                ("🍌 Banana", "1 unidade"),
-                ("🥛 Leite desnatado", "1 copo")
-            ],
-            "Almoço": [
-                ("🥩 Bife grelhado", "120g"),
-                ("🍚 Arroz branco", "1 xícara"),
-                ("🥗 Salada com azeite", "à vontade")
-            ],
-            "Jantar": [
-                ("🍝 Macarrão com frango desfiado", "1 prato"),
-                ("🥬 Espinafre refogado", "1 porção")
-            ],
-            "Lanches": [
-                ("🍪 Barra de proteína", "1 unidade"),
-                ("🍓 Morangos", "1 xícara")
-            ]
+            "Café da manhã": [("Pão integral", "2 fatias"), ("Queijo branco", "1 fatia"), ("Suco natural", "1 copo")],
+            "Almoço": [("Macarrão integral", "80g"), ("Carne vermelha magra", "150g"), ("Salada mista", "à vontade")],
+            "Lanche da tarde": [("Barra de cereal", "1 unidade"), ("Banana", "1 unidade")],
+            "Jantar": [("Arroz", "100g"), ("Omelete", "2 ovos"), ("Legumes cozidos", "50g")]
         }
     }
 
-    refeicoes = st.tabs(["Café da manhã", "Almoço", "Jantar", "Lanches"])
+    refeicoes = plano_alimentar.get(objetivo)
 
-    for i, nome_refeicao in enumerate(["Café da manhã", "Almoço", "Jantar", "Lanches"]):
-        with refeicoes[i]:
-            st.markdown(f"<h3 style='color: white;'>{nome_refeicao}</h3>", unsafe_allow_html=True)
-            for alimento, quantidade in plano_alimentar[objetivo][nome_refeicao]:
-                st.markdown(f"""
-                <div style="background-color: #222; padding: 10px; border-radius: 8px; margin-bottom: 10px;">
-                    <strong style="color: white;">{alimento}</strong><br>
-                    <span style="color: gray;">Quantidade:</span> <span style="color: white;">{quantidade}</span>
-                </div>
-                """, unsafe_allow_html=True)
+    if not refeicoes:
+        st.warning("Plano alimentar não disponível para esse objetivo.")
+        return
+
+    for nome_refeicao, itens in refeicoes.items():
+        with st.expander(f"🍽️ {nome_refeicao}"):
+            for alimento, quantidade in itens:
+                st.markdown(f"- **{alimento}** – {quantidade}")
+
+    # Estilo customizado com fundo preto
+    st.markdown(
+        """
+        <style>
+        .stApp {
+            background-color: #000000;
+            color: #FFFFFF;
+        }
+        .st-expander > summary {
+            background-color: #111111;
+            color: white;
+            font-weight: bold;
+        }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
