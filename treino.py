@@ -1,7 +1,4 @@
-
-import streamlit as st
-
-def gerar_treino_personalizado(objetivo, frequencia):
+gerar_treino_personalizado(objetivo, frequencia):
     st.subheader("Plano de Treino Personalizado")
 
     if objetivo == "Hipertrofia":
