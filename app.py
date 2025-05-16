@@ -52,39 +52,42 @@ st.markdown(
 
 # Menu lateral
 menu = ["Login", "Cadastro"] if not st.session_state.usuario else ["Perfil", "Treino", "Dieta", "Progresso", "Sair"]
+escolha = st.sidebar.selectbox("Menu", menu)
 
-# Se houver troca programada do menu (ex: botão cadastrar no login), usa essa
-if 'menu_selecionado' in st.session_state:
-    escolha = st.session_state.menu_selecionado
-else:
-    escolha = st.sidebar.selectbox("Menu", menu)
+# LOGIN e CADASTRO juntos para o layout do botão lado a lado
+if escolha == "Login" and not st.session_state.usuario:
+    st.subheader("Login e Cadastro")
 
-# LOGIN
-if escolha == "Login":
-    st.subheader("Login")
-    email = st.text_input("Email")
-    senha = st.text_input("Senha", type="password")
+    col1, col2 = st.columns([1, 1])
 
-    # Botões lado a lado
-    col1, col2 = st.columns(2)
     with col1:
+        st.markdown("### Login")
+        email_login = st.text_input("Email (login)", key="email_login")
+        senha_login = st.text_input("Senha (login)", type="password", key="senha_login")
         if st.button("Entrar"):
-            usuario = autenticar_usuario(email, senha)
+            usuario = autenticar_usuario(email_login, senha_login)
             if usuario:
                 st.session_state.usuario = usuario
                 st.success("Login realizado com sucesso!")
-                if 'menu_selecionado' in st.session_state:
-                    del st.session_state['menu_selecionado']
                 st.experimental_rerun()
             else:
                 st.error("Credenciais inválidas.")
-    with col2:
-        if st.button("Cadastrar"):
-            st.session_state.menu_selecionado = "Cadastro"
-            st.experimental_rerun()
 
-# CADASTRO
-elif escolha == "Cadastro":
+    with col2:
+        st.markdown("### Cadastro")
+        nome_cad = st.text_input("Nome (cadastro)", key="nome_cad")
+        email_cad = st.text_input("Email (cadastro)", key="email_cad")
+        senha_cad = st.text_input("Senha (cadastro)", type="password", key="senha_cad")
+        if st.button("Cadastrar"):
+            if cadastrar_usuario(nome_cad, email_cad, senha_cad):
+                st.success("Cadastro realizado. Faça login.")
+                # Opcional: limpar os campos após cadastro
+                st.experimental_rerun()
+            else:
+                st.error("Email já cadastrado.")
+
+# CADASTRO separado — opcional, você pode remover essa aba se usar o formulário acima
+elif escolha == "Cadastro" and not st.session_state.usuario:
     st.subheader("Cadastro")
     nome = st.text_input("Nome")
     email = st.text_input("Email")
@@ -92,9 +95,6 @@ elif escolha == "Cadastro":
     if st.button("Cadastrar"):
         if cadastrar_usuario(nome, email, senha):
             st.success("Cadastro realizado. Faça login.")
-            # Depois de cadastrar, volta para login
-            st.session_state.menu_selecionado = "Login"
-            st.experimental_rerun()
         else:
             st.error("Email já cadastrado.")
 
@@ -121,8 +121,6 @@ elif escolha == "Perfil" and st.session_state.usuario:
 # SAIR
 elif escolha == "Sair":
     st.session_state.usuario = None
-    if 'menu_selecionado' in st.session_state:
-        del st.session_state['menu_selecionado']
     st.success("Você saiu da sua conta.")
     st.experimental_rerun()
 
